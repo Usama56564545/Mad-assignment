@@ -1,0 +1,102 @@
+import React, { useState, useEffect } from 'react'; import { View, Text, TextInput, StyleSheet } from 'react-native'; import { NavigationContainer } from '@react-navigation/native'; import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; import * as Location from 'expo-location';
+const Tab = createBottomTabNavigator();
+function HomeScreen() {
+if (reverseGeocode.length > 0 && reverseGeocode[0].city) { setCity(reverseGeocode[0].city);
+} else { setCity('City Not Available For this location'); }
+} catch (error) { console.error("Location Error:", error); setErrorMsg('Error fetching location'); }
+})(); }, []);
+return (
+<View style={styles.container}>
+<Text style={styles.heading}>Your Location Info</Text>
+{errorMsg ? (
+<Text style={styles.content}>{errorMsg}</Text>
+) : (
+<>
+<Text style={styles.content}>City: {city}</Text>
+<Text style={styles.content}>Latitude: {latitude}</Text>
+const [city, setCity] = useState('Fetching...'); const [latitude, setLatitude] = useState(null); const [longitude, setLongitude] = useState(null); const [errorMsg, setErrorMsg] = useState(null);
+useEffect(() => {
+(async () => { try { let { status } = await Location.requestForegroundPermissionsAsync(); if (status !== 'granted') { setErrorMsg('Permission to access location was denied'); return;
+}
+let location = await Location.getCurrentPositionAsync({}); setLatitude(location.coords.latitude); setLongitude(location.coords.longitude);
+let reverseGeocode = await Location.reverseGeocodeAsync({
+latitude: location.coords.latitude, longitude: location.coords.longitude, });
+<Text style={styles.content}>Longitude: {longitude}</Text>
+</>
+)}
+</View>
+);
+}
+function ProfileScreen({ navigation }) {
+export default function App() { return (
+<NavigationContainer>
+<Tab.Navigator>
+<Tab.Screen name="Home" component={HomeScreen} />
+<Tab.Screen name="Profile" component={ProfileScreen} />
+<Tab.Screen name="Settings" component={SettingsScreen} /> </Tab.Navigator>
+</NavigationContainer>
+);
+}
+const styles = StyleSheet.create({ container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20,
+}, heading: { fontSize: 24,
+const [name, setName] = useState('User');
+useEffect(() => {
+navigation.setOptions({ title: name });
+}, [name]);
+return (
+<View style={styles.container}>
+<Text style={styles.heading}>Enter Your Name:</Text>
+<TextInput style={styles.input} value={name} onChangeText={(text) => setName(text)} />
+</View>
+);
+}
+function SettingsScreen() { return (
+<View style={styles.container}>
+<Text style={styles.heading}>Settings</Text> </View>
+)
+
+const styles = StyleSheet.create({ container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20,
+}, heading: { fontSize: 24,
+fontweight:
+
+bold',
+
+marginBottom: 20,
+
+},
+
+content: {
+
+fontSize: 18,
+
+textAlign: center",
+
+marginBottom: 10,
+
+},
+
+input: {
+
+borderWidth: 3,
+
+borderColor: '#ccc',
+
+padding:
+
+10,
+
+width:
+
+100%
+
+borderRadius: 8,
+
+fontSize: 18,
+
+},
+
+});
+
+
+
+
