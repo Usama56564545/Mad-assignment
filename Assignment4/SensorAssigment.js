@@ -3,26 +3,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, Button, ScrollView, ActivityIndicator } from 'react-native';
 import * as Sensors from 'expo-sensors';
-
-// Create Context API for data management
 const ApiContext = createContext();
-
 const ApiProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // API Endpoints (using JSONPlaceholder API)
   const API_BASE = 'https://jsonplaceholder.typicode.com';
-
-  // GET Request - Fetch posts (using useCallback)
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(${API_BASE}/posts);
       const data = await response.json();
-      setPosts(data.slice(0, 5)); // Only show first 5 for simplicity
+      setPosts(data.slice(0, 5)); 
       setError(null);
     } catch (err) {
       setError('Failed to fetch posts');
@@ -31,8 +24,6 @@ const ApiProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
-
-  // POST Request - Create new post (using useCallback)
   const createPost = useCallback(async () => {
     setLoading(true);
     try {
@@ -58,7 +49,6 @@ const ApiProvider = ({ children }) => {
     }
   }, []);
 
-  // PUT Request - Update post (using useCallback)
   const updatePost = useCallback(async () => {
     setLoading(true);
     try {
@@ -85,13 +75,12 @@ const ApiProvider = ({ children }) => {
     }
   }, []);
 
-  // GET Request - Fetch users (using useCallback)
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(${API_BASE}/users);
       const data = await response.json();
-      setUsers(data.slice(0, 5)); // Only show first 5
+      setUsers(data.slice(0, 5));
       setError(null);
     } catch (err) {
       setError('Failed to fetch users');
@@ -121,7 +110,6 @@ const ApiProvider = ({ children }) => {
 
 const useApi = () => useContext(ApiContext);
 
-// API Screen Component
 const ApiScreen = ({ navigation }) => {
   const { 
     posts, 
@@ -134,7 +122,7 @@ const ApiScreen = ({ navigation }) => {
     fetchUsers
   } = useApi();
 
-  // Fixed dependency array
+
   useEffect(() => {
     fetchPosts();
     fetchUsers();
@@ -188,14 +176,12 @@ const ApiScreen = ({ navigation }) => {
   );
 };
 
-// Sensor Screen Component
 const SensorScreen = () => {
   const [accelerometerData, setAccelerometerData] = useState({});
   const [isAvailable, setIsAvailable] = useState(false);
   const [isMonitoring, setIsMonitoring] = useState(false);
   const subscriptionRef = useRef(null);
 
-  // Check if accelerometer is available
   useEffect(() => {
     const checkAvailability = async () => {
       const available = await Sensors.Accelerometer.isAvailableAsync();
@@ -203,8 +189,7 @@ const SensorScreen = () => {
     };
     
     checkAvailability();
-    
-    // Cleanup function
+
     return () => {
       if (subscriptionRef.current) {
         subscriptionRef.current.remove();
@@ -212,7 +197,6 @@ const SensorScreen = () => {
     };
   }, []);
 
-  // Subscribe to accelerometer updates
   const subscribe = () => {
     subscriptionRef.current = Sensors.Accelerometer.addListener(data => {
       setAccelerometerData(data);
@@ -220,7 +204,6 @@ const SensorScreen = () => {
     setIsMonitoring(true);
   };
 
-  // Unsubscribe from accelerometer updates
   const unsubscribe = () => {
     if (subscriptionRef.current) {
       subscriptionRef.current.remove();
@@ -289,7 +272,6 @@ const SensorScreen = () => {
   );
 };
 
-// Create navigation stack
 const Stack = createStackNavigator();
 
 export default function App() {
